@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "banco"
+version = "0.1.0"
+description = ""
+authors = ["DieglisonVarejao <dieglisonvarejao01@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+
+
+[tool.poetry.group.dev.dependencies]
+isort = "^7.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
