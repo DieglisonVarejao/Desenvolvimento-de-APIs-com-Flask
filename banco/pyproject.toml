@@ -11,10 +11,16 @@ flask = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask-jwt-extended = "*"
+pytest = "*"
 
 
 [tool.poetry.group.dev.dependencies]
 isort = "^7.0.0"
+
+[tool.pytest]
+# addopts = ["-ra", "-q"]
+addopts = ["-vvv"]
+testpaths = ["tests"]
 
 [build-system]
 requires = ["poetry-core"]
