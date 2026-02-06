@@ -1,6 +1,5 @@
 import pytest
 from src.utils import eleva_quadrado, requires_role
-from unittest.mock import Mock, patch
 from http import HTTPStatus
 
 @pytest.mark.parametrize("test_input,expected", [(2, 4), (3, 9), (6, 36)])
@@ -23,40 +22,32 @@ def test_eleva_quadrado_falha(test_input, exc_class, msg):
     assert str(exc.value) == msg
 
 
-def test_requires_role_seccess():
-    mock_user = Mock()
+def test_requires_role_seccess(mocker):
+    # GIVEN (O QUE EU FORNEÇO PARA O MEU TEST)
+    mock_user = mocker.Mock()
     mock_user.role.name = "admin"
 
-    mock_get_jwt_identity = patch("src.utils.get_jwt_identity")
-    mock_db_get_or_404 = patch("src.utils.db.get_or_404", return_value=mock_user)
-    mock_get_jwt_identity.start()
-    mock_db_get_or_404.start()
+    mocker.patch("src.utils.get_jwt_identity")
+    mocker.patch("src.utils.db.get_or_404", return_value=mock_user)
 
     decorated_function = requires_role("admin")(lambda: "success")
-
+    
+    #WHEN (O QUE É EXECUTADO)
     result = decorated_function()
 
+    #THEN (O QUE É VERIFICADO)
     assert result == "success"
 
-    mock_get_jwt_identity.stop()
-    mock_db_get_or_404.stop()
 
-
-def test_requires_role_fail():
-    mock_user = Mock()
+def test_requires_role_fail(mocker):
+    mock_user = mocker.Mock()
     mock_user.role.name = "normal"
 
-    mock_get_jwt_identity = patch("src.utils.get_jwt_identity")
-    mock_db_get_or_404 = patch("src.utils.db.get_or_404", return_value=mock_user)
-    mock_get_jwt_identity.start()
-    mock_db_get_or_404.start()
+    mocker.patch("src.utils.get_jwt_identity")
+    mocker.patch("src.utils.db.get_or_404", return_value=mock_user)
 
     decorated_function = requires_role("admin")(lambda: "success")
-
-
+    
     result = decorated_function()
 
     assert result == ({"message": "User don't have access!"}, HTTPStatus.FORBIDDEN)
-
-    mock_get_jwt_identity.stop()
-    mock_db_get_or_404.stop()

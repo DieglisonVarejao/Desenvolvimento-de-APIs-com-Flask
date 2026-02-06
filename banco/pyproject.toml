@@ -12,6 +12,7 @@ flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask-jwt-extended = "*"
 pytest = "*"
+pytest-mock = "*"
 
 
 [tool.poetry.group.dev.dependencies]
