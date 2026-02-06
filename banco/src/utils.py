@@ -17,5 +17,6 @@ def requires_role(role_name):
         return wrapped
     return decorator
 
+#EXEMPLO DE TESTE UNITÁRIO
 def eleva_quadrado(x):
     return x**2
