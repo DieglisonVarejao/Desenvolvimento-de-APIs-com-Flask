@@ -1,14 +1,19 @@
 import pytest
 from src.app import create_app, db
+from sqlalchemy.pool import StaticPool
 
 @pytest.fixture()
 def app():
-    app = create_app()
-    app.config.update(
+    app = create_app(
         {
-        "SECRET_KEY": "test",
-        "SQLALCHEMY_DATABASE_URI": "sqlite://",
-        "JWT_SECRET_KEY": "test",
+            "TESTING": True,
+            "SECRET_KEY": "test",
+            "SQLALCHEMY_DATABASE_URI": "sqlite+pysqlite:///:memory:",
+            "SQLALCHEMY_ENGINE_OPTIONS": {
+                "connect_args": {"check_same_thread": False},
+                "poolclass": StaticPool,
+            },
+            "JWT_SECRET_KEY": "test",
         }
     )
 
@@ -16,7 +21,9 @@ def app():
         db.create_all()
         # other setup can go here
         yield app
-        # clean up / reset resources here
+        db.session.remove()
+        db.drop_all()
+        db.engine.dispose()
 
 
 @pytest.fixture()
